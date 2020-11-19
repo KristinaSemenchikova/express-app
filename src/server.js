@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import * as routes from './routes';
-import { errorHandler, errorManager } from './utils/errorHandler';
+import { errorHandler } from './utils/errorHandler';
 import { requestLogger } from './utils/logger';
 
 const app = express();
@@ -21,7 +21,7 @@ process.on('unhandledRejection', async (reason) => {
 });
 
 process.on('uncaughtException', async (error) => {
-  await errorManager(error);
+  await errorHandler(error);
 });
 
 export default app;

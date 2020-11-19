@@ -6,7 +6,7 @@ const extendedJoi = Joi.extend(JoiPhoneNumber);
 const validateSex = (value, helper) => {
   const sex = ['male', 'female'];
   if (!sex.includes(value)) {
-    return helper.message(`Sex must be one of ${sex.join(' ')}`);
+    return helper.message(`Sex must be ${sex.join(' or ')}`);
   }
   return true;
 };

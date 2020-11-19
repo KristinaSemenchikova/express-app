@@ -1,11 +1,8 @@
-export class NotFoundError extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.name = 'NotFoundError';
-    this.code = statusCode;
+import { NOT_FOUND } from '../../contants/statusCodes';
+import { BaseError } from './baseError';
 
-    Object.setPrototypeOf(this, new.target.prototype);
-
-    Error.captureStackTrace(this, this.constructor);
+export class NotFoundError extends BaseError {
+  constructor(message, statusCode = NOT_FOUND) {
+    super('NotFoundError', message, statusCode);
   }
 }

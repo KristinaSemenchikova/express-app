@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/', async (req, res, next) => {
   const { limit, page } = req.query;
-  console.log(limit, page);
   try {
     if (limit || page) {
       const paginated = await userService.getPaginatedUsers(limit, page);

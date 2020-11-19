@@ -1,11 +1,8 @@
-export class ValidationError extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.name = 'ValidationError';
-    this.code = statusCode;
+import { BAD_REQUEST } from '../../contants/statusCodes';
+import { BaseError } from './baseError';
 
-    Object.setPrototypeOf(this, new.target.prototype);
-
-    Error.captureStackTrace(this, this.constructor);
+export class ValidationError extends BaseError {
+  constructor(message, statusCode = BAD_REQUEST) {
+    super('ValidationError', message, statusCode);
   }
 }
