@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { validateUser } from '../../validators/user';
 import userService from '../../services/users';
-import { NotFoundError } from '../../utils/customErrors/notFound';
+import { NotFoundError } from '../../utils/customErrors';
+import { authMiddleware } from '../../utils/middlewares/auth';
 
 const router = Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   const { limit, page } = req.query;
   try {
     if (limit || page) {
@@ -29,7 +30,7 @@ router.post('/', validateUser, async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authMiddleware, async (req, res, next) => {
   const { id } = req.params;
   try {
     const user = await userService.getById(id);
@@ -40,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.put('/:id', validateUser, async (req, res, next) => {
+router.put('/:id', [authMiddleware, validateUser], async (req, res, next) => {
   const { body, params: { id } } = req;
   try {
     const user = await userService.update(body, id);
@@ -51,7 +52,7 @@ router.put('/:id', validateUser, async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', authMiddleware, async (req, res, next) => {
   const { id } = req.params;
   try {
     const deleted = await userService.remove(id);
