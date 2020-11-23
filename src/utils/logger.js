@@ -27,6 +27,8 @@ export const requestLogger = (req, res, next) => {
     payload: {
       body: req.body,
       params: req.params,
+      query: req.query,
+      headers: req.headers,
     },
   });
   next();

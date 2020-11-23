@@ -1,4 +1,5 @@
 import { allUsers } from '../models/users';
+import { hashPassword } from '../utils/global';
 
 class UsersService {
   constructor(users) {
@@ -18,16 +19,26 @@ class UsersService {
     return this.users.slice(+fromIndex, +toIndex);
   }
 
+  async getOne(props = {}) {
+    debugger
+    return this.users.find((user) => {
+      const matches = new Set(Object.keys(props).map((key) => user[key].includes(props[key])));
+      return matches.has(true) && matches.size === 1;
+    });
+  }
+
   async getById(id) {
     return this.users.find((user) => user.id === +id);
   }
 
-  async add(user) {
+  async add(userData) {
+    const { password, ...user } = userData;
+    const hashedPassword = await hashPassword(password);
     const newUser = {
       id: Date.now(),
       ...user,
     };
-    this.users.push(newUser);
+    this.users.push({ ...newUser, password: hashedPassword });
     return newUser;
   }
 

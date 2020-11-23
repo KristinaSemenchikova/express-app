@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import * as routes from './routes';
-import { errorHandler } from './utils/errorHandler';
+import { errorHandler } from './utils/middlewares/errorHandler';
 import { requestLogger } from './utils/logger';
 
 const app = express();

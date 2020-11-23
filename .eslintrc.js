@@ -21,5 +21,9 @@ module.exports = {
   rules: {
     'import/prefer-default-export': 0,
     'consistent-return': 0,
+    'arrow-parens': 0,
+    'max-len': [2, {
+      code: 120,
+    }],
   },
 };
