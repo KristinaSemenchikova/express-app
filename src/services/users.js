@@ -20,7 +20,6 @@ class UsersService {
   }
 
   async getOne(props = {}) {
-    debugger
     return this.users.find((user) => {
       const matches = new Set(Object.keys(props).map((key) => user[key].includes(props[key])));
       return matches.has(true) && matches.size === 1;
