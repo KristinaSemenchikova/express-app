@@ -13,6 +13,13 @@ class AuthService {
     return true;
   }
 
+  async updateAuthUserToken(token, userId) {
+    this.authData = this.authData.map(authData => {
+      if (authData.userId === userId) return { ...authData, token };
+      return authData;
+    });
+  }
+
   async getAuthUser(token) {
     return this.authData.find((authData) => authData.token === token);
   }

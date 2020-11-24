@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import passport from '../../passportWithStrategy';
 import { validateAuth } from '../../validators/auth';
 import userService from '../../services/users';
-import { validatePassword, getToken } from '../../utils/global';
+import { validatePassword, getToken, refreshToken } from '../../utils/global';
 import authService from '../../services/auth';
 import { authMiddleware } from '../../utils/middlewares/auth';
 import { NotFoundError } from '../../utils/customErrors';
@@ -20,7 +21,7 @@ router.post('/login', validateAuth, async (req, res, next) => {
 
     await authService.addAuthUser({ token: accessToken, userId: user.id });
 
-    res.json({ accessToken });
+    res.set('X-Token', accessToken).send('OK');
   } catch (error) {
     next(error);
   }
@@ -34,5 +35,23 @@ router.post('/logout', authMiddleware, async (req, res, next) => {
     next(error);
   }
 });
+
+router.post('/refresh', authMiddleware, async (req, res, next) => {
+  try {
+    const newToken = refreshToken(req.token);
+    await authService.updateAuthUserToken(newToken, req.userId);
+    res.set('X-Token', newToken).send('OK');
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+router.get('/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  async (req, res) => {
+    res.redirect('/');
+  });
 
 export { router as auth };
