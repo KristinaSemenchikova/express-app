@@ -3,16 +3,17 @@ import path from 'path';
 
 const logDirname = path.join(path.resolve(), 'logs');
 
+const customFormat = winston.format.combine(winston.format.colorize({ all: true }));
+
 export const createLogger = () => {
   const transports = [
     new winston.transports.File({ filename: 'error.log', dirname: logDirname, level: 'error' }),
     new winston.transports.File({ filename: 'request.log', dirname: logDirname, level: 'info' }),
   ];
   if (process.env !== 'production') {
-    transports.push(new winston.transports.Console({ format: winston.format.json() }));
+    transports.push(new winston.transports.Console({ format: customFormat }));
   }
   return winston.createLogger({
-    format: winston.format.json(),
     transports,
     level: 'info',
   });
