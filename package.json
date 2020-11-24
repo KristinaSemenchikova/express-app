@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
-    "start:debug": "nodemon  --inspect --exec babel-node src/index.js"
+    "start": "nodemon --exec babel-node -r dotenv/config src/index.js",
+    "start:debug": "nodemon  --inspect --exec babel-node -r dotenv/config src/index.js"
   },
   "author": "",
   "license": "ISC",

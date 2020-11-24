@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/config';
 
 export const hashPassword = async (password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -9,6 +8,6 @@ export const hashPassword = async (password) => {
 
 export const validatePassword = (password, hashedPassword) => bcrypt.compare(password, hashedPassword);
 
-export const getToken = data => jwt.sign(data, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+export const getToken = data => jwt.sign(data, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-export const verifyToken = (token) => jwt.verify(token, JWT_SECRET);
+export const verifyToken = (token) => jwt.verify(token, process.env.JWT_SECRET);
