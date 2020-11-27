@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import session from 'express-session';
-import * as routes from './routes';
+import { router } from './routes';
 import { errorHandler } from './utils/middlewares/errorHandler';
 import { requestLogger } from './utils/middlewares/logger';
 import passport from './passportWithStrategy';
@@ -18,8 +18,7 @@ app.use(passport.session());
 
 app.use(requestLogger);
 
-app.use('/users', routes.users);
-app.use('/auth', routes.auth);
+app.use('/api', router);
 
 app.use(errorHandler);
 
