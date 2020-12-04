@@ -1,4 +1,4 @@
-import { UNAUTHORIZED } from '../../contants/statusCodes';
+import { UNAUTHORIZED } from '../../constants/statusCodes';
 import { BaseError } from './baseError';
 
 export class UnauthorizedError extends BaseError {

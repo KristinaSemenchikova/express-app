@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from '../../contants/statusCodes';
+import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from '../../constants/statusCodes';
 import { errorLogger } from './logger';
 
 const getStatusCode = (errorName) => {

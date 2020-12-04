@@ -1,13 +1,10 @@
-import { allUsers } from '../models/users';
+/* eslint-disable class-methods-use-this */
 import { hashPassword } from '../utils/global';
+import UserModel from '../models/users';
 
 class UsersService {
-  constructor(users) {
-    this.users = [...users];
-  }
-
   async getAll() {
-    return this.users;
+    return UserModel.find();
   }
 
   async getPaginatedUsers(perPage = 10, page = 1) {
@@ -33,12 +30,11 @@ class UsersService {
   async add(userData) {
     const { password, ...user } = userData;
     const hashedPassword = await hashPassword(password);
-    const newUser = {
-      id: Date.now(),
-      ...user,
-    };
-    this.users.push({ ...newUser, password: hashedPassword });
-    return newUser;
+    const newUser = await UserModel.create({
+      ...user, password: hashedPassword,
+    });
+    // eslint-disable-next-line no-underscore-dangle
+    return { ...userData, id: newUser._id };
   }
 
   async update(data, id) {
@@ -64,6 +60,6 @@ class UsersService {
   }
 }
 
-const userService = new UsersService(allUsers);
+const userService = new UsersService();
 
 export default userService;

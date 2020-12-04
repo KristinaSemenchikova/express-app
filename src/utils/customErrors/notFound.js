@@ -1,4 +1,4 @@
-import { NOT_FOUND } from '../../contants/statusCodes';
+import { NOT_FOUND } from '../../constants/statusCodes';
 import { BaseError } from './baseError';
 
 export class NotFoundError extends BaseError {

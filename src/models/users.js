@@ -1,98 +1,37 @@
-export const allUsers = [
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 1,
+import mongoose, { model } from 'mongoose';
+import { EMAIL_REGEXP, PHONE_REGEXP } from '../constants/validation';
+
+const { Schema } = mongoose;
+
+const userSchema = new Schema({
+  name: {
+    type: String,
+    minlength: 3,
+    maxlength: 60,
+    required: true,
   },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 2,
+  email: {
+    type: String,
+    match: EMAIL_REGEXP,
+    required: true,
+    unique: true,
   },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 3,
+  phone: {
+    type: String,
+    min: 3,
+    match: PHONE_REGEXP,
   },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 4,
+  password: {
+    type: String,
+    required: true,
   },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 5,
+  sex: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    required: true,
   },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 6,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 7,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 8,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 9,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 10,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 11,
-  },
-  {
-    name: 'John Doe',
-    email: 'jdoe@example.com',
-    phone: '+380662332377',
-    password: 'ab12345Cd',
-    sex: 'male',
-    id: 12,
-  },
-];
+});
+
+const UserModel = model('User', userSchema);
+
+export default UserModel;

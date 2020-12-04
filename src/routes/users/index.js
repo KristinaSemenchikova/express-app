@@ -20,7 +20,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
   }
 });
 
-router.post('/', validateUser, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { body } = req;
   try {
     const user = await userService.add(body);

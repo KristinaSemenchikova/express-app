@@ -1,21 +1,20 @@
 import Joi from 'joi';
-import JoiPhoneNumber from 'joi-phone-number';
-
-const extendedJoi = Joi.extend(JoiPhoneNumber);
+import {
+  EMAIL_REGEXP, PHONE_REGEXP, SEXES, PASSWORD_REGEXP,
+} from '../constants/validation';
 
 const validateSex = (value, helper) => {
-  const sex = ['male', 'female'];
-  if (!sex.includes(value)) {
-    return helper.message(`Sex must be ${sex.join(' or ')}`);
+  if (!SEXES.includes(value)) {
+    return helper.message(`Sex must be ${SEXES.join(' or ')}`);
   }
   return true;
 };
 
 const userSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  phone: extendedJoi.string().phoneNumber(),
-  password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/).required(),
+  email: Joi.string().regex(EMAIL_REGEXP).required(),
+  phone: Joi.string().regex(PHONE_REGEXP),
+  password: Joi.string().regex(PASSWORD_REGEXP).required(),
   sex: Joi.string().custom(validateSex).required(),
 });
 

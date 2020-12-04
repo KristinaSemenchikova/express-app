@@ -1,4 +1,4 @@
-import { BAD_REQUEST } from '../../contants/statusCodes';
+import { BAD_REQUEST } from '../../constants/statusCodes';
 import { BaseError } from './baseError';
 
 export class ValidationError extends BaseError {
