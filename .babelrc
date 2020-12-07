@@ -3,6 +3,17 @@
       "@babel/preset-env"
     ],
     "plugins": [
-        "@babel/plugin-proposal-export-default-from"
+        "@babel/plugin-proposal-export-default-from",
+        ["module-resolver", {
+          "alias": {
+            "@middlewares": "./src/middlewares",
+            "@models": "./src/models",
+            "@services": "./src/services",
+            "@utils": "./src/utils",
+            "@validators": "./src/validators",
+            "@routes": "./src/routes",
+            "@constants": "./src/constants"
+          }
+        }]
     ]
   }

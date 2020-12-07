@@ -1,9 +1,9 @@
 import express from 'express';
 import helmet from 'helmet';
 import session from 'express-session';
+import { errorHandler } from '@middlewares/errorHandler';
+import { requestLogger } from '@middlewares/logger';
 import { router } from './routes';
-import { errorHandler } from './utils/middlewares/errorHandler';
-import { requestLogger } from './utils/middlewares/logger';
 import passport from './passportWithStrategy';
 
 const app = express();

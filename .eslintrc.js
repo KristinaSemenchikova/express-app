@@ -6,6 +6,8 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
+    'plugin:import/errors',
+    'plugin:import/warnings',
   ],
   parser: '@babel/eslint-parser',
   parserOptions: {
@@ -25,5 +27,9 @@ module.exports = {
     'max-len': [2, {
       code: 120,
     }],
+    'no-underscore-dangle': 0,
+  },
+  settings: {
+    'import/resolver': { 'babel-module': {} },
   },
 };

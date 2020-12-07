@@ -1,10 +1,17 @@
 /* eslint-disable class-methods-use-this */
-import { hashPassword } from '../utils/global';
-import UserModel from '../models/users';
+import { hashPassword } from '@utils/global';
+import UserModel from '@models/users';
 
 class UsersService {
   async getAll() {
-    return UserModel.find();
+    return UserModel.find({}, { password: false, __v: false });
+  }
+
+  async getUsers(perPage = 10, page = 1) {
+    const totalPages = await UserModel.countDocuments();
+    if (page > totalPages) return [];
+    const skip = Number(perPage * (page - 1));
+    return UserModel.find({}, null, { skip, limit: +perPage });
   }
 
   async getPaginatedUsers(perPage = 10, page = 1) {
@@ -17,14 +24,11 @@ class UsersService {
   }
 
   async getOne(props = {}) {
-    return this.users.find((user) => {
-      const matches = new Set(Object.keys(props).map((key) => user[key].includes(props[key])));
-      return matches.has(true) && matches.size === 1;
-    });
+    return UserModel.findOne(props);
   }
 
   async getById(id) {
-    return this.users.find((user) => user.id === +id);
+    return UserModel.findById(id, { password: false, __v: false });
   }
 
   async add(userData) {
@@ -34,7 +38,7 @@ class UsersService {
       ...user, password: hashedPassword,
     });
     // eslint-disable-next-line no-underscore-dangle
-    return { ...userData, id: newUser._id };
+    return this.getById(newUser._id);
   }
 
   async update(data, id) {
@@ -53,10 +57,7 @@ class UsersService {
   }
 
   async remove(id) {
-    const foundUser = this.users.find((user) => user.id === +id);
-    if (!foundUser) return false;
-    this.users = this.users.filter((user) => user.id !== id);
-    return true;
+    await UserModel.deleteOne({ _id: id });
   }
 }
 

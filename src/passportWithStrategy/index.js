@@ -1,6 +1,5 @@
 import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
-import authService from '../services/auth';
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -28,11 +27,11 @@ passport.use(new GitHubStrategy({
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: 'http://127.0.0.1:3000/auth/github/callback',
 }, ((accessToken, refreshToken, profile, done) => {
-  authService.addAuthUser({
-    token: accessToken,
-    refreshToken,
-    userId: profile.id,
-  }).then(() => done(null, profile)).catch((err) => done(err, profile));
+  try {
+    done(null, profile);
+  } catch (error) {
+    done(error, profile);
+  }
 })));
 
 export default passport;

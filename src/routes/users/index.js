@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { validateUser } from '../../validators/user';
-import userService from '../../services/users';
-import { NotFoundError } from '../../utils/customErrors';
-import { authMiddleware } from '../../utils/middlewares/auth';
+import { validateUser } from '@validators/user';
+import userService from '@services/users';
+import { NotFoundError } from '@utils/customErrors';
+import { authMiddleware } from '@middlewares/auth';
 
 const router = Router();
 
@@ -10,7 +10,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
   const { limit, page } = req.query;
   try {
     if (limit || page) {
-      const paginated = await userService.getPaginatedUsers(limit, page);
+      const paginated = await userService.getUsers(limit, page);
       return res.json(paginated);
     }
     const users = await userService.getAll();
@@ -20,7 +20,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', [authMiddleware, validateUser], async (req, res, next) => {
   const { body } = req;
   try {
     const user = await userService.add(body);
@@ -55,8 +55,7 @@ router.put('/:id', [authMiddleware, validateUser], async (req, res, next) => {
 router.delete('/:id', authMiddleware, async (req, res, next) => {
   const { id } = req.params;
   try {
-    const deleted = await userService.remove(id);
-    if (!deleted) throw new NotFoundError('User not found');
+    await userService.remove(id);
     res.send('OK');
   } catch (error) {
     next(error);
