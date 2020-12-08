@@ -1,21 +1,18 @@
 import { Router } from 'express';
 import { authMiddleware } from '@middlewares/auth';
 import { NotFoundError } from '@utils/customErrors';
-import { validateAuth, validateLogin } from '@validators/auth';
 import { validatePassword, getToken, refreshToken } from '@utils/global';
-import authService from '@services/auth';
 import passport from '../passportWithStrategy';
 import userService from '../services/users';
+import { validateUser } from '../validators/user';
+import { validateLogin } from '../validators/login';
 
 const router = Router();
 
-router.post('/signup', validateAuth, async (req, res, next) => {
-  const { email, password, name } = req.body;
+router.post('/signup', validateUser, async (req, res, next) => {
   try {
-    const authInfo = await authService.signUp(email, password);
-    const user = await userService.add({ name }, authInfo.id);
-    await authService.addUser(authInfo.id, user.id);
-    res.json(authInfo);
+    const user = await userService.signUp(req.body);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -24,13 +21,13 @@ router.post('/signup', validateAuth, async (req, res, next) => {
 router.post('/login', validateLogin, async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const authInfo = await authService.getByEmail(email);
+    const user = await userService.getOne({ email });
 
-    if (!authInfo) throw new NotFoundError('Wrong credentials');
+    if (!user) throw new NotFoundError('Wrong credentials');
 
-    await validatePassword(password, authInfo.password);
+    await validatePassword(password, user.password);
 
-    const accessToken = await getToken({ userId: authInfo.user, authInfoId: authInfo.id });
+    const accessToken = await getToken({ userId: user.id });
 
     res.set('X-Token', accessToken).send('OK');
   } catch (error) {

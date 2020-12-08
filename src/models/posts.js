@@ -9,6 +9,7 @@ const postSchema = new Schema({
   content: {
     type: String,
     required: true,
+    // doesn't work when set on mutiple fields
     // index: {
     //   type: 'text',
     // },

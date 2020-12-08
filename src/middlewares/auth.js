@@ -11,9 +11,8 @@ export const authMiddleware = async (req, res, next) => {
     const [type, token] = authHeader.split(' ');
     if (type !== 'Bearer') throw new UnauthorizedError('Wrong auth header');
 
-    const { userId, authInfoId } = verifyToken(token);
+    const { userId } = verifyToken(token);
     req.userId = userId;
-    req.authInfoId = authInfoId;
     req.token = token;
     next();
   } catch (error) {
