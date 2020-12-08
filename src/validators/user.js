@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import {
-  EMAIL_REGEXP, PHONE_REGEXP, SEXES, PASSWORD_REGEXP,
-} from '../constants/validation';
+  PHONE_REGEXP, SEXES,
+} from '@constants/validation';
 
 const validateSex = (value, helper) => {
   if (!SEXES.includes(value)) {
@@ -12,9 +12,7 @@ const validateSex = (value, helper) => {
 
 const userSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().regex(EMAIL_REGEXP).required(),
   phone: Joi.string().regex(PHONE_REGEXP),
-  password: Joi.string().regex(PASSWORD_REGEXP).required(),
   sex: Joi.string().custom(validateSex).required(),
 });
 

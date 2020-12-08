@@ -2,22 +2,32 @@ import { Router } from 'express';
 import { authMiddleware } from '@middlewares/auth';
 import { NotFoundError } from '@utils/customErrors';
 import { validateAuth } from '@validators/auth';
-import userService from '@services/users';
 import { validatePassword, getToken, refreshToken } from '@utils/global';
+import authService from '@services/auth';
 import passport from '../../passportWithStrategy';
 
 const router = Router();
 
+router.post('/signup', validateAuth, async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const authInfo = await authService.signUp(email, password);
+    res.json(authInfo);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/login', validateAuth, async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const user = await userService.getOne({ email });
+    const user = await authService.getByEmail(email);
 
     if (!user) throw new NotFoundError('Wrong credentials');
 
     await validatePassword(password, user.password);
 
-    const accessToken = await getToken({ email, id: user._id });
+    const accessToken = await getToken({ email, id: user.id });
 
     res.set('X-Token', accessToken).send('OK');
   } catch (error) {

@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { hashPassword } from '@utils/global';
-import UserModel from '@models/users';
+import UserModel from '../models/users';
 
 class UsersService {
   async getAll() {
@@ -28,36 +27,24 @@ class UsersService {
   }
 
   async getById(id) {
-    return UserModel.findById(id, { password: false, __v: false });
+    return UserModel.findById(id, { __v: false, credentials: false });
   }
 
-  async add(userData) {
-    const { password, ...user } = userData;
-    const hashedPassword = await hashPassword(password);
-    const newUser = await UserModel.create({
-      ...user, password: hashedPassword,
-    });
-    // eslint-disable-next-line no-underscore-dangle
-    return this.getById(newUser._id);
+  async add(userData, authInfoId) {
+    const newUser = await UserModel.create({ ...userData, credentials: authInfoId });
+    return this.getById(newUser.id);
+  }
+
+  async isExists(authInfoId) {
+    return UserModel.exists({ credentials: authInfoId });
   }
 
   async update(data, id) {
-    const foundUser = this.users.find((user) => user.id === +id);
-    if (!foundUser) return false;
-
-    const updatedUser = {
-      ...foundUser,
-      ...data,
-    };
-    this.users = this.users.map((user) => {
-      if (user.id === +id) return updatedUser;
-      return user;
-    });
-    return updatedUser;
+    return UserModel.findByIdAndUpdate(id, data);
   }
 
   async remove(id) {
-    await UserModel.deleteOne({ _id: id });
+    await UserModel.findByIdAndDelete(id);
   }
 }
 

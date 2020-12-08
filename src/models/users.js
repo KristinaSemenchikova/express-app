@@ -1,5 +1,5 @@
 import mongoose, { model } from 'mongoose';
-import { EMAIL_REGEXP, PHONE_REGEXP } from '../constants/validation';
+import { PHONE_REGEXP } from '../constants/validation';
 
 const { Schema } = mongoose;
 
@@ -10,25 +10,19 @@ const userSchema = new Schema({
     maxlength: 60,
     required: true,
   },
-  email: {
-    type: String,
-    match: EMAIL_REGEXP,
-    required: true,
-    unique: true,
-  },
   phone: {
     type: String,
     min: 3,
     match: PHONE_REGEXP,
   },
-  password: {
-    type: String,
-    required: true,
-  },
   sex: {
     type: String,
     enum: ['male', 'female', 'other'],
     required: true,
+  },
+  credentials: {
+    type: Schema.Types.ObjectId,
+    ref: 'AuthInfo',
   },
 });
 

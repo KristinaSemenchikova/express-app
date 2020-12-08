@@ -1,8 +1,9 @@
 import Joi from 'joi';
+import { PASSWORD_REGEXP } from '@constants/validation';
 
 const authSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/).required(),
+  password: Joi.string().regex(PASSWORD_REGEXP).required(),
 });
 
 export const validateAuth = async (req, res, next) => {
