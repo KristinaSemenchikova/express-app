@@ -27,7 +27,7 @@ class UsersService {
   }
 
   async getById(id) {
-    return UserModel.findById(id, { __v: false, credentials: false });
+    return UserModel.findById(id, { __v: false, credentials: false }).populate('posts');
   }
 
   async add(userData, authInfoId) {
@@ -35,11 +35,7 @@ class UsersService {
     return this.getById(newUser.id);
   }
 
-  async isExists(authInfoId) {
-    return UserModel.exists({ credentials: authInfoId });
-  }
-
-  async update(data, id) {
+  async update(id, data) {
     return UserModel.findByIdAndUpdate(id, data);
   }
 

@@ -24,6 +24,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'AuthInfo',
   },
+  posts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+  }],
 });
 
 const UserModel = model('User', userSchema);

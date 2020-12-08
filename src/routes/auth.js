@@ -4,7 +4,7 @@ import { NotFoundError } from '@utils/customErrors';
 import { validateAuth } from '@validators/auth';
 import { validatePassword, getToken, refreshToken } from '@utils/global';
 import authService from '@services/auth';
-import passport from '../../passportWithStrategy';
+import passport from '../passportWithStrategy';
 
 const router = Router();
 
@@ -21,13 +21,13 @@ router.post('/signup', validateAuth, async (req, res, next) => {
 router.post('/login', validateAuth, async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const user = await authService.getByEmail(email);
+    const authInfo = await authService.getByEmail(email);
 
-    if (!user) throw new NotFoundError('Wrong credentials');
+    if (!authInfo) throw new NotFoundError('Wrong credentials');
 
-    await validatePassword(password, user.password);
+    await validatePassword(password, authInfo.password);
 
-    const accessToken = await getToken({ email, id: user.id });
+    const accessToken = await getToken({ userId: authInfo.user, authInfoId: authInfo.id });
 
     res.set('X-Token', accessToken).send('OK');
   } catch (error) {
