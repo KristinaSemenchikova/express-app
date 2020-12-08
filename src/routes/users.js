@@ -3,22 +3,8 @@ import { validateUser } from '@validators/user';
 import userService from '@services/users';
 import { NotFoundError } from '@utils/customErrors';
 import { authMiddleware } from '@middlewares/auth';
-import authService from '../services/auth';
 
 const router = Router();
-
-router.post('/', [authMiddleware, validateUser], async (req, res, next) => {
-  const { body } = req;
-  const { userId, authInfoId } = req;
-  try {
-    if (userId) throw new Error('User already exists');
-    const user = await userService.add(body, authInfoId);
-    await authService.addUser(authInfoId, user.id);
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
 
 router.get('/', authMiddleware, async (req, res, next) => {
   const { limit, page } = req.query;

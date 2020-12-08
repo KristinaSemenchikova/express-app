@@ -17,6 +17,10 @@ class PostService {
   async addPost(data, userId) {
     return PostModel.create({ ...data, user: userId });
   }
+
+  async delete(id) {
+    return PostModel.findByIdAndDelete(id);
+  }
 }
 
 const postService = new PostService();

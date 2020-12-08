@@ -18,7 +18,6 @@ const userSchema = new Schema({
   sex: {
     type: String,
     enum: ['male', 'female', 'other'],
-    required: true,
   },
   credentials: {
     type: Schema.Types.ObjectId,

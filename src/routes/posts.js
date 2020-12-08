@@ -38,4 +38,16 @@ router.get('/', authMiddleware, async (req, res, next) => {
   }
 });
 
+router.delete('/:id', authMiddleware, async (req, res, next) => {
+  const postId = req.params.id;
+  try {
+    await postService.delete(postId);
+    await userService.update(req.userId,
+      { $pull: { posts: postId } });
+    res.json({ message: 'Post was deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as posts };
