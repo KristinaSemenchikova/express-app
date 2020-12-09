@@ -1,5 +1,6 @@
 import winston from 'winston';
 import path from 'path';
+import LogModel from '../models/logs';
 
 const logDirname = path.join(path.resolve(), 'logs');
 
@@ -21,18 +22,27 @@ export const createLogger = () => {
 
 const logger = createLogger();
 
-export const requestLogger = (req, res, next) => {
-  logger.info({
-    timestamp: new Date(),
-    method: req.method,
-    payload: {
-      body: req.body,
-      params: req.params,
-      query: req.query,
-      headers: req.headers,
-    },
-  });
-  next();
+export const requestLogger = async (req, res, next) => {
+  try {
+    const log = {
+      method: req.method,
+      path: req.originalUrl,
+      payload: {
+        body: req.body,
+        params: req.params,
+        query: req.query,
+        headers: req.headers,
+      },
+    };
+    logger.info({
+      timestamp: new Date(),
+      ...log,
+    });
+    await LogModel.create(log);
+    next();
+  } catch (error) {
+    next();
+  }
 };
 
 export const errorLogger = async (err) => {
