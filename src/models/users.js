@@ -15,11 +15,24 @@ const userSchema = new Schema({
     match: PASSWORD_REGEXP,
     required: true,
   },
-  name: {
+  firstName: {
     type: String,
     minlength: 3,
     maxlength: 60,
     required: true,
+  },
+  lastName: {
+    type: String,
+    minlength: 3,
+    maxlength: 60,
+    required: true,
+  },
+  fullName: {
+    type: String,
+    virtual: true,
+    get() {
+      return `${this.firstName} ${this.lastName}`;
+    },
   },
   phone: {
     type: String,
@@ -34,6 +47,9 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Post',
   }],
+}, {
+  toJSON: { getters: true },
+  toObject: { getters: true },
 });
 
 const UserModel = model('User', userSchema);

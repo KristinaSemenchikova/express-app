@@ -13,7 +13,8 @@ const validateSex = (value, helper) => {
 const userSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().regex(PASSWORD_REGEXP).required(),
-  name: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
   phone: Joi.string().regex(PHONE_REGEXP),
   sex: Joi.string().custom(validateSex).required(),
 });
