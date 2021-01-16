@@ -16,7 +16,6 @@ const getStatusCode = (errorName) => {
   }
 };
 export const errorHandler = async (error, req, res, next) => {
-  console.log(error);
   if (process.env.NODE_ENV !== 'test') await errorLogger(error);
   if (error.name !== 'Error') {
     res.status(error.code < 599 ? error.code : getStatusCode(error.name));

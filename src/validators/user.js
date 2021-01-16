@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import {
   PHONE_REGEXP, SEXES, PASSWORD_REGEXP,
-} from '@constants/validation';
+} from '../constants/validation';
 
 const validateSex = (value, helper) => {
   if (!SEXES.includes(value)) {

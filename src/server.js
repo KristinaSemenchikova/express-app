@@ -16,7 +16,7 @@ app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: fals
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(requestLogger);
+// app.use(requestLogger);
 
 app.use('/api', router);
 
