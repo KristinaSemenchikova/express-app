@@ -2,8 +2,6 @@
 import { hashPassword } from '@utils/global';
 import db from '../../../models';
 
-const withOutFields = { password: false, __v: false };
-
 class UsersService {
   constructor(model) {
     this.model = model;
@@ -19,20 +17,21 @@ class UsersService {
     return this.getById(newUser.id, false);
   }
 
-  async getAll(populateField) {
-    const query = this.model.find({}, withOutFields);
-    return populateField ? query.populate(populateField) : query;
+  async getAll() {
+    // const query = this.model.find({}, withOutFields);
+    // return populateField ? query.populate(populateField) : query;
+    return this.model.scope('withPosts').findAll();
   }
 
   async getPaginatedUsers(perPage = 10, page = 1) {
-    const totalPages = await this.model.countDocuments();
+    const totalPages = await this.model.count();
     if (page > totalPages) return [];
-    const skip = Number(perPage * (page - 1));
-    return this.model.find({}, withOutFields, { skip, limit: +perPage });
+    const offset = Number(perPage * (page - 1));
+    return this.model.findAll({ offset, limit: +perPage });
   }
 
-  async getOne(where = {}) {
-    return this.model.findOne({ where });
+  async getByEmail(email) {
+    return this.model.scope('withPassword').findOne({ where: { email } });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -52,12 +51,3 @@ class UsersService {
 const userService = new UsersService(db.User);
 
 export default userService;
-
-// async getPaginatedUsers(perPage = 10, page = 1) {
-//   const totalPages = Math.ceil(this.users.length / perPage);
-//   if (page > totalPages) return [];
-//   if (page === 1 && totalPages === page) return this.users;
-//   const fromIndex = perPage * (+page - 1);
-//   const toIndex = perPage * page;
-//   return this.users.slice(+fromIndex, +toIndex);
-// }

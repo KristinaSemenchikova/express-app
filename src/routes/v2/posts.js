@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authMiddleware } from '@middlewares/auth';
 import { validatePost } from '../../validators/post';
-import postService from '../../services/posts';
-import userService from '../../services/users';
+import postService from '../../services/v2/posts';
+import userService from '../../services/v2/users';
 
 const router = Router();
 
@@ -18,14 +18,14 @@ router.post('/', [authMiddleware, validatePost], async (req, res, next) => {
 });
 
 router.get('/', authMiddleware, async (req, res, next) => {
-  const { search = '' } = req.query;
   try {
-    let posts = [];
-    if (search) {
-      posts = await postService.search(search);
-    } else {
-      posts = await postService.getAll();
-    }
+    // let posts = [];
+    // if (search) {
+    //   posts = await postService.search(search);
+    // } else {
+    //   posts = await postService.getAll();
+    // }
+    const posts = await postService.getAll();
     res.json(posts);
   } catch (error) {
     next(error);

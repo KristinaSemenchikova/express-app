@@ -12,7 +12,7 @@ const startServer = async () => {
     //   useFindAndModify: false,
     //   useCreateIndex: true,
     // });
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync();
     app.listen(PORT, () => {
       console.log(`Server running on PORT ${PORT}`);
     });

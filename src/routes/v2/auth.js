@@ -23,7 +23,7 @@ router.post('/signup', validateUser, async (req, res, next) => {
 router.post('/login', validateLogin, async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const user = await userService.getOne({ email });
+    const user = await userService.getByEmail(email);
 
     if (!user) throw new NotFoundError('Wrong credentials');
 

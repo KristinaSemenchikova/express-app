@@ -21,9 +21,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['male', 'female', 'other'],
     },
-  }, {});
+  }, {
+    defaultScope: {
+      attributes: { exclude: ['password'] },
+    },
+    scopes: {
+      withPassword: {},
+    },
+  });
   User.associate = function (models) {
     User.hasMany(models.Post);
+  };
+  User.initScopes = (models) => {
+    User.addScope('withPosts', {
+      attributes: { exclude: ['password'] },
+      include: [{ model: models.Post }],
+    });
   };
   return User;
 };
