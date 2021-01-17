@@ -19,10 +19,29 @@ const userSchema = Joi.object({
   sex: Joi.string().custom(validateSex).required(),
 });
 
+const userUpdateSchema = Joi.object({
+  email: Joi.string().email(),
+  password: Joi.string().regex(PASSWORD_REGEXP),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  phone: Joi.string().regex(PHONE_REGEXP),
+  sex: Joi.string().custom(validateSex),
+});
+
 export const validateUser = async (req, res, next) => {
   try {
     const { body } = req;
     await userSchema.validateAsync(body);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const validateUpdateUser = async (req, res, next) => {
+  try {
+    const { body } = req;
+    await userUpdateSchema.validateAsync(body);
     next();
   } catch (error) {
     next(error);

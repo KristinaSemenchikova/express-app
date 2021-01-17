@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import db from '../../../models';
 /* eslint-disable class-methods-use-this */
 
@@ -11,9 +12,12 @@ class PostService {
   }
 
   async search(searchString) {
-    return this.model.find({
-      $text: {
-        $search: `\"${searchString}\"`, // eslint-disable-line no-useless-escape
+    return this.model.findAll({
+      where: {
+        [Op.or]: [
+          { title: { [Op.substring]: searchString } },
+          { content: { [Op.substring]: searchString } },
+        ],
       },
     });
   }
@@ -23,7 +27,7 @@ class PostService {
   }
 
   async delete(id) {
-    return this.model.findByIdAndDelete(id);
+    return this.model.destroy({ where: { id } });
   }
 }
 

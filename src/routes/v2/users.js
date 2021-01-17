@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { validateUser } from '@validators/user';
-import { NotFoundError } from '@utils/customErrors';
-import { authMiddleware } from '@middlewares/auth';
+import { NotFoundError } from '../../utils/customErrors';
+import { authMiddleware } from '../../middlewares/auth';
 import userService from '../../services/v2/users';
+import { validateUpdateUser } from '../../validators/user';
 
 const router = Router();
 
@@ -31,10 +31,10 @@ router.get('/:id', authMiddleware, async (req, res, next) => {
   }
 });
 
-router.put('/', [authMiddleware, validateUser], async (req, res, next) => {
+router.put('/', [authMiddleware, validateUpdateUser], async (req, res, next) => {
   try {
-    const user = await userService.update(req.userId, req.body);
-    if (!user) throw new NotFoundError('User not found');
+    await userService.update(req.userId, req.body);
+    const user = await userService.getById(req.userId);
     res.json(user);
   } catch (error) {
     next(error);

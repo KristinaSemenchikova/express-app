@@ -35,16 +35,17 @@ class UsersService {
   }
 
   // eslint-disable-next-line no-unused-vars
-  async getById(id, _withPassword = false, _populateField) {
-    return this.model.findByPk(id);
+  async getById(id, withPosts = false) {
+    const query = withPosts ? this.model.scope('withPosts') : this.model;
+    return query.findByPk(id);
   }
 
   async update(id, data) {
-    return this.model.findByIdAndUpdate(id, data);
+    return this.model.update(data, { where: { id } });
   }
 
   async delete(id) {
-    await this.model.findByIdAndDelete(id);
+    await this.model.destroy({ where: { id } });
   }
 }
 
