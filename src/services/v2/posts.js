@@ -11,6 +11,10 @@ class PostService {
     return this.model.findAll();
   }
 
+  async getPost(id) {
+    return this.model.scope('withLikes', 'withCreator').findByPk(id);
+  }
+
   async search(searchString) {
     return this.model.findAll({
       where: {
@@ -22,8 +26,8 @@ class PostService {
     });
   }
 
-  async addPost(data, UserId) {
-    return this.model.create({ ...data, UserId });
+  async addPost(data, creatorId) {
+    return this.model.create({ ...data, creatorId });
   }
 
   async delete(id) {

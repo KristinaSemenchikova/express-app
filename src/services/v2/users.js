@@ -20,7 +20,7 @@ class UsersService {
   async getAll() {
     // const query = this.model.find({}, withOutFields);
     // return populateField ? query.populate(populateField) : query;
-    return this.model.scope('withPosts').findAll();
+    return this.model.scope('withPosts', 'withLikes').findAll();
   }
 
   async getPaginatedUsers(perPage = 10, page = 1) {

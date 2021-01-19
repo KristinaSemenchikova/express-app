@@ -30,12 +30,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   User.associate = function (models) {
-    User.hasMany(models.Post);
+    User.hasMany(models.Post, { as: 'posts', foreignKey: 'creatorId' });
+    User.belongsToMany(models.Post, { through: models.LikedPost, as: 'myLikes', foreignKey: 'likeUserId' });
   };
   User.initScopes = (models) => {
     User.addScope('withPosts', {
       attributes: { exclude: ['password'] },
-      include: [{ model: models.Post }],
+      include: [{ model: models.Post, as: 'posts' }],
+    });
+    User.addScope('withLikes', {
+      attributes: { exclude: ['password'] },
+      include: [{ model: models.Post, as: 'myLikes' }],
     });
   };
   return User;
